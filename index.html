@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="monochrome" data-grid="standard">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title id="pageTitle">Архив клипов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo-area" id="logoArea">
+        <div class="logo-icon" id="siteLogoIcon">🎬</div>
+        <h1 class="logo-title" id="siteLogoTitle">ПРЕЛЕСТИ САДИЗМА</h1>
+      </div>
+
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Поиск по участникам, цитатам...">
+      </div>
+
+      <div class="header-actions">
+        <button id="randomClipBtn" class="btn btn-secondary desktop-only" title="Случайный клип">
+          🎲 <span>Случайный клип</span>
+        </button>
+        <button id="openSettingsBtn" class="btn btn-secondary desktop-only" title="Персонализация">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span>Настройки</span>
+        </button>
+        <button id="openUploadBtn" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="btn-icon">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Добавить клип</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Toolbar -->
+    <section class="toolbar">
+      <div class="filter-tabs">
+        <button class="filter-pill active" data-filter="all">Все клипы (<span id="totalCount">0</span>)</button>
+        <button class="filter-pill" data-filter="top">⭐ Лучшие</button>
+        <button class="filter-pill" data-filter="recent">⚡ Свежие</button>
+      </div>
+
+      <div class="friends-filter-wrapper">
+        <span class="filter-label">Участники:</span>
+        <div class="friends-filter-list" id="friendsPills">
+          <!-- Dynamic friend tags -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Clips Feed -->
+    <section class="clips-grid" id="clipsGrid">
+      <!-- Dynamic Clip Cards injected via JS -->
+    </section>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+      <div class="empty-emoji">🎬</div>
+      <h2>Здесь пока пусто</h2>
+      <p>Добавьте первый видеоклип или сбросьте параметры поиска</p>
+      <button class="btn btn-primary" onclick="document.getElementById('openUploadBtn').click()">Добавить видео</button>
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-nav-bar">
+    <button class="mobile-nav-item active" id="mobileHomeBtn">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Клипы</span>
+    </button>
+    <button class="mobile-nav-item" id="mobileRandomBtn">
+      <span class="mobile-nav-icon-text">🎲</span>
+      <span>Случайный</span>
+    </button>
+    <button class="mobile-nav-item mobile-nav-upload" id="mobileUploadBtn">
+      <div class="upload-fab">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </div>
+      <span>Добавить</span>
+    </button>
+    <button class="mobile-nav-item" id="mobileSettingsBtn">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+      <span>Настройки</span>
+    </button>
+  </nav>
+
+  <!-- Upload Modal -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3>Добавить клип</h3>
+          <p class="modal-desc">Загрузите видеофайл или вставьте ссылку</p>
+        </div>
+        <button class="close-modal-btn" id="closeUploadModal">&times;</button>
+      </div>
+
+      <form id="uploadForm" class="modal-form">
+        <!-- Drag & Drop Zone -->
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="videoFileInput" accept="video/*,.mp4,.mkv,.webm,.mov,.avi,.m4v,.wmv,.flv" hidden>
+          <div class="drop-content" id="dropContent">
+            <div class="drop-icon">📹</div>
+            <p class="drop-title">Перетащите видео сюда или <span class="browse-link">выберите файл</span></p>
+            <p class="drop-hint">Поддерживаются MP4, WebM, MOV, MKV и др.</p>
+          </div>
+          <div class="video-preview-box" id="previewBox" style="display: none;">
+            <video id="previewVideo" controls playsinline></video>
+            <button type="button" class="btn-remove-video" id="removeVideoBtn" title="Выбрать другой файл">&times;</button>
+          </div>
+        </div>
+
+        <div class="form-divider">
+          <span>или прямая ссылка на видео</span>
+        </div>
+
+        <div class="form-group">
+          <input type="url" id="videoUrlInput" class="form-input" placeholder="https://example.com/video.mp4">
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="clipTitle">Название клипа *</label>
+            <input type="text" id="clipTitle" class="form-input" placeholder="Название момента..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="clipDate">Дата записи</label>
+            <input type="date" id="clipDate" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="clipFriends">Участники (через запятую)</label>
+          <input type="text" id="clipFriends" class="form-input" placeholder="Blusweek, anchorite, Samurai_666, Tamatyla">
+        </div>
+
+        <div class="form-group">
+          <label for="clipDescription">Описание момента</label>
+          <textarea id="clipDescription" class="form-input" rows="2" placeholder="Краткий контекст ситуации..."></textarea>
+        </div>
+
+        <!-- Automatic Moment Detection Section -->
+        <div class="form-group moments-section">
+          <div class="moments-header-row">
+            <label>⏱️ Ключевые моменты (Таймкоды)</label>
+            <button type="button" class="btn-detect-action" id="autoDetectMomentsBtn" title="Сканировать аудиопики и яркие моменты">
+              ⚡ Определить автоматически
+            </button>
+          </div>
+
+          <div class="detection-status" id="detectionStatus" style="display: none;">
+            <div class="detect-spinner"></div>
+            <span id="detectionStatusText">Анализ звуковых пиков и ярких моментов...</span>
+          </div>
+
+          <div class="upload-timestamps-list" id="uploadTimestampsList">
+            <!-- Dynamic generated/editable timestamps -->
+          </div>
+
+          <button type="button" class="btn-add-timestamp" id="addCustomTimestampBtn">
+            + Добавить таймкод вручную
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label class="slider-label">
+            <span>Оценка момента:</span>
+            <span class="vibe-badge" id="vibeLabel">10 / 10</span>
+          </label>
+          <input type="range" id="clipRating" min="1" max="10" value="10" class="rating-slider">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelUploadBtn">Отмена</button>
+          <button type="submit" class="btn btn-primary" id="saveClipBtn">Сохранить клип</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Theater / Full Player Modal -->
+  <div class="modal-overlay theater-overlay" id="theaterModal">
+    <div class="theater-content">
+      <button class="close-theater-btn" id="closeTheaterBtn">&times;</button>
+      
+      <div class="theater-video-wrapper">
+        <video id="theaterVideo" controls autoplay playsinline></video>
+      </div>
+
+      <div class="theater-details">
+        <div class="theater-meta">
+          <div class="theater-header-row">
+            <h2 id="theaterTitle">Название нарезки</h2>
+            <div class="theater-rating-badge" id="theaterRating">10/10</div>
+          </div>
+          <div class="theater-sub-info">
+            <span id="theaterDate">15 октября 2026</span>
+            <span class="dot-separator">•</span>
+            <div class="theater-friends" id="theaterFriends"></div>
+          </div>
+          <p class="theater-desc" id="theaterDesc">Описание момента</p>
+          
+          <div class="theater-timestamps" id="theaterTimestamps">
+            <span class="timestamps-title">⏱️ Ключевые моменты:</span>
+            <div class="timestamps-list" id="timestampsList"></div>
+          </div>
+        </div>
+
+        <div class="theater-reactions-bar">
+          <span class="reactions-title">Реакции:</span>
+          <div class="reactions-list" id="theaterReactions">
+            <button class="reaction-btn" data-reaction="laugh">😂 <span class="count">0</span></button>
+            <button class="reaction-btn" data-reaction="skull">💀 <span class="count">0</span></button>
+            <button class="reaction-btn" data-reaction="clown">🤡 <span class="count">0</span></button>
+            <button class="reaction-btn" data-reaction="fire">🔥 <span class="count">0</span></button>
+            <button class="reaction-btn" data-reaction="based">🗿 <span class="count">0</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Personalization / Settings Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3>Персонализация</h3>
+          <p class="modal-desc">Настройте оформление сайта</p>
+        </div>
+        <button class="close-modal-btn" id="closeSettingsModal">&times;</button>
+      </div>
+
+      <div class="modal-form">
+        <!-- Site Title Customization -->
+        <div class="form-group">
+          <label for="customSiteTitle">Название архива</label>
+          <input type="text" id="customSiteTitle" class="form-input" placeholder="Например: ПРЕЛЕСТИ САДИЗМА">
+        </div>
+
+        <!-- Logo Icon Picker -->
+        <div class="form-group">
+          <label>Иконка логотипа</label>
+          <div class="icon-picker" id="iconPicker">
+            <button type="button" class="icon-option active" data-icon="🎬">🎬</button>
+            <button type="button" class="icon-option" data-icon="🔥">🔥</button>
+            <button type="button" class="icon-option" data-icon="🎮">🎮</button>
+            <button type="button" class="icon-option" data-icon="⚡">⚡</button>
+            <button type="button" class="icon-option" data-icon="💀">💀</button>
+            <button type="button" class="icon-option" data-icon="👑">👑</button>
+            <button type="button" class="icon-option" data-icon="🎯">🎯</button>
+            <button type="button" class="icon-option" data-icon="🧊">🧊</button>
+          </div>
+        </div>
+
+        <!-- Accent Color Theme -->
+        <div class="form-group">
+          <label>Стиль акцента</label>
+          <div class="theme-picker" id="themePicker">
+            <button type="button" class="theme-option active" data-theme="monochrome">
+              <span class="theme-dot dot-mono"></span>
+              <span>Монохром</span>
+            </button>
+            <button type="button" class="theme-option" data-theme="slate">
+              <span class="theme-dot dot-slate"></span>
+              <span>Индиго</span>
+            </button>
+            <button type="button" class="theme-option" data-theme="emerald">
+              <span class="theme-dot dot-emerald"></span>
+              <span>Изумруд</span>
+            </button>
+            <button type="button" class="theme-option" data-theme="amber">
+              <span class="theme-dot dot-amber"></span>
+              <span>Янтарь</span>
+            </button>
+            <button type="button" class="theme-option" data-theme="crimson">
+              <span class="theme-dot dot-crimson"></span>
+              <span>Рубин</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid Layout Density -->
+        <div class="form-group desktop-only">
+          <label>Размер сетки клипов (ПК)</label>
+          <div class="grid-picker" id="gridPicker">
+            <button type="button" class="grid-option" data-grid="large">Крупная (2)</button>
+            <button type="button" class="grid-option active" data-grid="standard">Обычная (3)</button>
+            <button type="button" class="grid-option" data-grid="compact">Компактная (4)</button>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="justify-content: space-between;">
+          <button type="button" class="btn btn-secondary" id="resetSettingsBtn">Сбросить</button>
+          <button type="button" class="btn btn-primary" id="saveSettingsBtn">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
